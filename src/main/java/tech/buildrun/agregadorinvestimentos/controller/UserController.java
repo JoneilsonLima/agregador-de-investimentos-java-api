@@ -57,4 +57,14 @@ public class UserController {
         }
     }
 
+    @PutMapping("/{userId}")
+    @Transactional
+    public ResponseEntity<Void> updateUserByID(
+            @PathVariable("userId") String userId,
+            @RequestBody UpdateUserDto updateUserDto) {
+
+        userService.updateUserById(userId, updateUserDto);
+        return ResponseEntity.noContent().build();
+    }
+
 }

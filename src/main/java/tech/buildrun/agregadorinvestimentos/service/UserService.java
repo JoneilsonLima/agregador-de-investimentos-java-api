@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.buildrun.agregadorinvestimentos.controller.CreateUserDto;
+import tech.buildrun.agregadorinvestimentos.controller.UpdateUserDto;
 import tech.buildrun.agregadorinvestimentos.entity.User;
 import tech.buildrun.agregadorinvestimentos.mapper.UserMapper;
 import tech.buildrun.agregadorinvestimentos.repository.UserRepository;
@@ -36,10 +37,30 @@ public class UserService {
     public Optional<User> getUserById(String userId) {
         var findUser = userRepository.findById(UUID.fromString(userId));
         if (findUser.isEmpty()) {
-            new EntityNotFoundException();
+            new EntityNotFoundException("User not found with ID: " + userId);
         }
 
         return findUser;
+    }
+
+    public void updateUserById(String userId, UpdateUserDto updateUserDto) {
+        var id = UUID.fromString(userId);
+        var userEntity = userRepository.findById(id);
+
+        if (userEntity.isPresent()) {
+            var user = userEntity.get();
+
+            if (updateUserDto.username() != null) {
+                user.setUsername(updateUserDto.username());
+            }
+
+            if (updateUserDto.password() != null) {
+                user.setPassword(updateUserDto.password());
+            }
+
+            userRepository.save(user);
+        }
+
     }
 
     public List<User> listUsers() {
@@ -51,7 +72,7 @@ public class UserService {
         var userExists = userRepository.existsById(id);
 
         if (!userExists) {
-            new EntityNotFoundException();
+            new EntityNotFoundException("User not found with ID: " + id);
         }
 
         userRepository.deleteById(id);
