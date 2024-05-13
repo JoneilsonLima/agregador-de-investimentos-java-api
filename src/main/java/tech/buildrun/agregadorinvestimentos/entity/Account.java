@@ -17,6 +17,10 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID accountId;
 
+    @OneToOne(mappedBy = "account")
+    @PrimaryKeyJoinColumn
+    private BillingAddress billingAddress;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
