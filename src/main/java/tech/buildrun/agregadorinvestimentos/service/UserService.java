@@ -9,6 +9,7 @@ import tech.buildrun.agregadorinvestimentos.mapper.UserMapper;
 import tech.buildrun.agregadorinvestimentos.repository.UserRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,10 +34,26 @@ public class UserService {
     }
 
     public Optional<User> getUserById(String userId) {
-        return userRepository.findById(UUID.fromString(userId));
+        var findUser = userRepository.findById(UUID.fromString(userId));
+        if (findUser.isEmpty()) {
+            new EntityNotFoundException();
+        }
+
+        return findUser;
     }
 
     public List<User> listUsers() {
         return userRepository.findAll();
+    }
+
+    public void deleteById(String userId) {
+        var id = UUID.fromString(userId);
+        var userExists = userRepository.existsById(id);
+
+        if (!userExists) {
+            new EntityNotFoundException();
+        }
+
+        userRepository.deleteById(id);
     }
 }
