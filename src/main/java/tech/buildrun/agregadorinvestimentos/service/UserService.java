@@ -30,8 +30,7 @@ public class UserService {
         userSaved.setPassword(createUserDto.password());
         userSaved.setEmail(createUserDto.email());
         userSaved.setUsername(createUserDto.username());
-        userRepository.save(userSaved);
-        return userSaved.getUserId();
+        return userRepository.save(userSaved).getUserId();
     }
 
     public Optional<User> getUserById(String userId) {
