@@ -1,5 +1,6 @@
 package tech.buildrun.agregadorinvestimentos.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -91,7 +92,7 @@ public class UserServiceTest {
 
         @Test
         @DisplayName("Should get user by id with success when optional is present")
-        void shouldGetUserByIdWithSuccess() {
+        void shouldGetUserByIdWithSuccessWhenOptionalIsPresent() {
             // Arrange
             List<Account> accounts = new ArrayList<>();
             var user = new User(
@@ -110,6 +111,23 @@ public class UserServiceTest {
             // Asert
             assertTrue(output.isPresent());
             assertEquals(user.getUserId(), uuidArgumentCaptor.getValue());
+        }
+
+        @Test
+        @DisplayName("Should get user by id with success when optional is empty")
+        void shouldGetUserByIdWithSuccessWhenOptionalIsEmpty() {
+            // Arrange
+            var userId = UUID.randomUUID();
+            doReturn(Optional.empty()).when(userRepository).findById(uuidArgumentCaptor.capture());
+            // Act
+            EntityNotFoundException thrown = assertThrows(
+                    EntityNotFoundException.class,
+                    () -> userService.getUserById(userId.toString()),
+                    "Expected getUserById() to throw, but it didn't"
+            );
+
+            // Assert
+            assertEquals("User not found with ID: " + userId, thrown.getMessage());
         }
 
     }

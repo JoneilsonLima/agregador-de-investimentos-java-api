@@ -36,7 +36,7 @@ public class UserService {
     public Optional<User> getUserById(String userId) {
         var findUser = userRepository.findById(UUID.fromString(userId));
         if (findUser.isEmpty()) {
-            new EntityNotFoundException("User not found with ID: " + userId);
+            throw new EntityNotFoundException("User not found with ID: " + userId);
         }
 
         return findUser;
