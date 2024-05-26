@@ -71,7 +71,7 @@ public class UserService {
         var userExists = userRepository.existsById(id);
 
         if (!userExists) {
-            new EntityNotFoundException("User not found with ID: " + id);
+            throw new EntityNotFoundException("User not found with ID: " + id);
         }
 
         userRepository.deleteById(id);

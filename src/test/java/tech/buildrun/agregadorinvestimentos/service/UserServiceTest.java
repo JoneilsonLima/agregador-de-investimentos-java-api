@@ -132,4 +132,58 @@ public class UserServiceTest {
 
     }
 
+    @Nested
+    class listUsers {
+        @Test
+        @DisplayName("Should return all users with success")
+        void shouldReturnAllUsersWithSuccess() {
+            // Arrange
+            List<Account> accounts = new ArrayList<>();
+            var user = new User(
+                    UUID.randomUUID(),
+                    "username",
+                    "email@email.com",
+                    "password",
+                    accounts,
+                    Instant.now(),
+                    null
+            );
+            var userList = List.of(user);
+            doReturn(userList).when(userRepository).findAll();
+
+            // Act
+            var output = userService.listUsers();
+
+            // Assert
+            assertNotNull(output);
+            assertEquals(userList.size(), output.size());
+        }
+    }
+
+    @Nested
+    class deleteById {
+        @Test
+        @DisplayName("should delete with success")
+        void shouldDeleteWithSuccess() {
+            // Arrange
+            var userId = UUID.randomUUID();
+            doReturn(true)
+                    .when(userRepository).existsById(uuidArgumentCaptor.capture());
+
+            doNothing()
+                    .when(userRepository).deleteById(uuidArgumentCaptor.capture());
+
+            // Act
+            userService.deleteById(userId.toString());
+
+            // Assert
+            var idList = uuidArgumentCaptor.getAllValues();
+            assertEquals(userId, idList.get(0));
+            assertEquals(userId, idList.get(1));
+
+            verify(userRepository, times(1)).existsById(idList.get(0));
+            verify(userRepository, times(1)).deleteById(idList.get(1));
+        }
+    }
+
 }
