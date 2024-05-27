@@ -70,10 +70,9 @@ public class UserService {
         var id = UUID.fromString(userId);
         var userExists = userRepository.existsById(id);
 
-        if (!userExists) {
-            throw new EntityNotFoundException("User not found with ID: " + id);
+        if (userExists) {
+            userRepository.deleteById(id);
         }
 
-        userRepository.deleteById(id);
     }
 }
