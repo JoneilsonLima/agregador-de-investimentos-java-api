@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -27,5 +28,9 @@ public class Account {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "account")
+    @JoinColumn(name = "account_id")
+    private List<AccountStock> accountStocks;
 
 }
