@@ -29,7 +29,7 @@ public class Account {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany
     @JoinColumn(name = "account_id")
     private List<AccountStock> accountStocks;
 
