@@ -1,29 +1,36 @@
 package tech.buildrun.agregadorinvestimentos.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import tech.buildrun.agregadorinvestimentos.controller.CreateUserDto;
-import tech.buildrun.agregadorinvestimentos.controller.UpdateUserDto;
+import org.springframework.web.server.ResponseStatusException;
+import tech.buildrun.agregadorinvestimentos.controller.dto.CreateAccountDto;
+import tech.buildrun.agregadorinvestimentos.controller.dto.CreateUserDto;
+import tech.buildrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
+import tech.buildrun.agregadorinvestimentos.entity.Account;
+import tech.buildrun.agregadorinvestimentos.entity.BillingAddress;
 import tech.buildrun.agregadorinvestimentos.entity.User;
 import tech.buildrun.agregadorinvestimentos.mapper.UserMapper;
+import tech.buildrun.agregadorinvestimentos.repository.AccountRepository;
+import tech.buildrun.agregadorinvestimentos.repository.BillingAddressRepository;
 import tech.buildrun.agregadorinvestimentos.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final BillingAddressRepository billingAddressRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserMapper userMapper;
 
     public UUID createUser(CreateUserDto createUserDto) {
         User userSaved = new User();
@@ -74,5 +81,27 @@ public class UserService {
             userRepository.deleteById(id);
         }
 
+    }
+
+    public void createAccount(String userId, CreateAccountDto createAccountDto) {
+        var user = userRepository.findById(UUID.fromString(userId))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        var account = new Account();
+        account.setAccountId(UUID.randomUUID());
+        account.setUser(user);
+        account.setBillingAddress(null);
+        account.setAccountStocks(new ArrayList<>());
+        account.setDescription(createAccountDto.description());
+
+        var accountCreated = accountRepository.save(account);
+
+        var billingAddress = new BillingAddress();
+        billingAddress.setId(account.getAccountId());
+        billingAddress.setAccount(accountCreated);
+        billingAddress.setStreet(createAccountDto.street());
+        billingAddress.setNumber(createAccountDto.number());
+
+        billingAddressRepository.save(billingAddress);
     }
 }

@@ -2,7 +2,9 @@ package tech.buildrun.agregadorinvestimentos.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
@@ -10,6 +12,8 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "tb_accounts")
 public class Account {
 
@@ -18,7 +22,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID accountId;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "account")
     @PrimaryKeyJoinColumn
     private BillingAddress billingAddress;
 

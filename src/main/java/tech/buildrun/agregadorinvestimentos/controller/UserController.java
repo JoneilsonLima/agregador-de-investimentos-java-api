@@ -5,12 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import tech.buildrun.agregadorinvestimentos.controller.dto.CreateAccountDto;
+import tech.buildrun.agregadorinvestimentos.controller.dto.CreateUserDto;
+import tech.buildrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
 import tech.buildrun.agregadorinvestimentos.entity.User;
 import tech.buildrun.agregadorinvestimentos.service.UserService;
 
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -21,7 +23,6 @@ public class UserController {
     public UserController(UserService userService) {
         this.userService = userService;
     }
-
 
     @PostMapping
     @Transactional
@@ -65,6 +66,17 @@ public class UserController {
 
         userService.updateUserById(userId, updateUserDto);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{userId}/accounts")
+    @Transactional
+    public ResponseEntity<Void> updateUserByID(
+            @PathVariable("userId") String userId,
+            @RequestBody CreateAccountDto createAccountDto) {
+
+        userService.createAccount(userId, createAccountDto);
+
+        return ResponseEntity.ok().build();
     }
 
 }

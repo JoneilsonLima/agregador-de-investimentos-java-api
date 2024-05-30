@@ -1,15 +1,14 @@
 package tech.buildrun.agregadorinvestimentos.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tech.buildrun.agregadorinvestimentos.controller.CreateUserDto;
-import tech.buildrun.agregadorinvestimentos.controller.UpdateUserDto;
+import tech.buildrun.agregadorinvestimentos.controller.dto.CreateUserDto;
+import tech.buildrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
 import tech.buildrun.agregadorinvestimentos.entity.Account;
 import tech.buildrun.agregadorinvestimentos.entity.User;
 import tech.buildrun.agregadorinvestimentos.repository.UserRepository;
