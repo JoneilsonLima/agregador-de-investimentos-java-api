@@ -70,7 +70,7 @@ public class UserController {
 
     @PostMapping("/{userId}/accounts")
     @Transactional
-    public ResponseEntity<Void> updateUserByID(
+    public ResponseEntity<Void> createAccount(
             @PathVariable("userId") String userId,
             @RequestBody CreateAccountDto createAccountDto) {
 
