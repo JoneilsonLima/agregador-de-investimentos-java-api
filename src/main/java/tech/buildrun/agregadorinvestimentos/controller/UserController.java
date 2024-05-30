@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import tech.buildrun.agregadorinvestimentos.controller.dto.AccountResponseDto;
 import tech.buildrun.agregadorinvestimentos.controller.dto.CreateAccountDto;
 import tech.buildrun.agregadorinvestimentos.controller.dto.CreateUserDto;
 import tech.buildrun.agregadorinvestimentos.controller.dto.UpdateUserDto;
@@ -77,6 +78,15 @@ public class UserController {
         userService.createAccount(userId, createAccountDto);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}/accounts")
+    @Transactional
+    public ResponseEntity<List<AccountResponseDto>> getAllAccount(@PathVariable("userId") String userId) {
+
+        var accounts = userService.listAccounts(userId);
+
+        return ResponseEntity.ok().body(accounts);
     }
 
 }
